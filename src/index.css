@@ -3,6 +3,9 @@
 @tailwind utilities;
 @layer base {
   :root {
+    --shape-white: #ffffff;
+    --shape-bg: #fbf4f4;
+    --shape: #f5eaea;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
