@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import logo from "../../assets/logo.svg";
 import { NavLink, Outlet } from "react-router-dom";
 import { ChartNoAxesCombined, Package, Plus } from "lucide-react";
