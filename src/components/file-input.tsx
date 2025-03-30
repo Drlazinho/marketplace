@@ -96,13 +96,13 @@ export default function FileInput({
   }
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-2")}>
       <div
         className={cn(
           "relative flex flex-col items-center justify-center w-28  rounded-lg cursor-pointer transition-colors",
           isDragging ? "border-primary bg-primary/5" : "border-input hover:border-primary/50 hover:bg-muted/50",
           preview ? "h-auto aspect-auto" : "h-28",
-          "bg-shape-shape", // Light pink background matching the image
+          "bg-shape-shape", className // Light pink background matching the image
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -120,7 +120,7 @@ export default function FileInput({
 
         {preview ? (
           <div className="relative w-full">
-            <img src={preview || "/placeholder.svg"} alt="Preview" className="max-h-64 max-w-full mx-auto rounded-md" />
+            <img src={preview || "/placeholder.svg"} alt="Preview" className="max-h-[350px] max-w-full mx-auto rounded-md object-cover" />
             <Button variant="secondary" size="sm" className="absolute bottom-0 right-0" onClick={removeFile}>
             <Trash className="w-4 h-4 text-orange-base" />
             </Button>

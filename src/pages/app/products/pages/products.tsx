@@ -1,8 +1,8 @@
 import { Helmet } from "react-helmet-async";
-import ProductCard from "./card-product";
+import ProductCard from "../components/card-product";
 import { Input } from "@/components/ui/input";
-import search from "../../../assets/icon/search-01.svg";
-import sales from "../../../assets/icon/sale-tag-02.svg";
+import search from "../../../../assets/icon/search-01.svg";
+import sales from "../../../../assets/icon/sale-tag-02.svg";
 import { CustomButton } from "@/components/custom-button";
 import CustomSelect from "@/components/custom-select";
 import { Tag } from "lucide-react";

@@ -8,13 +8,14 @@ import { Eye, Mail, AlertCircle, EyeOff } from "lucide-react"
 export interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   helperText?: string
+  noIcon?: boolean
   state?: "default" | "active" | "error"
   filled?: boolean
   icon?: React.ReactNode
 }
 
 const Input = forwardRef<HTMLInputElement, CustomInputProps>(
-  ({ className, label, helperText, state = "default", filled = false, icon, type, ...props }, ref) => {
+  ({ className, label, helperText, state = "default", filled = false, noIcon, icon, type, ...props }, ref) => {
     const [isFocused, setIsFocused] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const isPassword = type === "password"
@@ -33,16 +34,20 @@ const Input = forwardRef<HTMLInputElement, CustomInputProps>(
       <div className={cn("w-full space-y-1.5", className )}>
         {label && <label className={cn("text-xs font-medium uppercase", labelColor)}>{label}</label>}
         <div className="relative">
-          <div className={cn("absolute left-0 top-1/2 -translate-y-1/2 pl-3", iconColor)}>
-            {icon || <Mail size={18} />}
-          </div>
+          {
+            icon &&    <div className={cn("absolute left-0 top-1/2 -translate-y-1/2 pl-3", iconColor)}>
+                {icon}
+            </div>
+          }
+       
           <input
             type={isPassword && showPassword ? "text" : type}
             className={cn(
-              "flex h-10 w-full rounded-none border-0 border-b bg-transparent px-3 py-2 pl-10 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50",
+              "flex h-10 w-full rounded-none border-0 border-b bg-transparent  py-2 pl-10 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50",
               state === "active" && "border-orange-500",
               state === "error" && "border-red-500",
               state === "default" && "border-gray-300",
+              noIcon && "pl-0"
             )}
             ref={ref}
             onFocus={() => setIsFocused(true)}

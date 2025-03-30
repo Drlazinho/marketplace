@@ -1,5 +1,5 @@
 import logo from "../../assets/logo.svg";
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { ChartNoAxesCombined, Package, Plus } from "lucide-react";
 import { CustomButton } from "@/components/custom-button";
 
@@ -7,7 +7,7 @@ export function AppLayout() {
   return (
     <div className="min-h-screen w-full flex flex-col bg-shape-background">
       <div className="h-20 p-4 flex flex-row justify-between items-center border-b-shape-shape border-2">
-        <img src={logo} alt=""  width={80}/>{" "}
+        <img src={logo} alt="" width={80} />{" "}
         <div className="flex flex-row gap-4">
           <NavLink to={"/"}>
             <div className="flex flex-row gap-2">
@@ -21,7 +21,9 @@ export function AppLayout() {
           </NavLink>
         </div>
         <div className="flex flex-row gap-4">
-          <CustomButton startIcon={<Plus />}>Novo Produto</CustomButton>
+          <Link to={"/newproduct"}>
+            <CustomButton startIcon={<Plus />}>Novo Produto</CustomButton>
+          </Link>
           <img src={logo} width={60} height={60} />
         </div>
       </div>
