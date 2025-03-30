@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef } from "react"
-import { ImageUp, Upload } from "lucide-react"
+import { ImageUp, RemoveFormattingIcon, Trash, Upload } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -97,15 +97,11 @@ export default function FileInput({
 
   return (
     <div className={cn("space-y-2", className)}>
-      <Label htmlFor="file-input" className="text-sm font-medium">
-        Upload Image
-      </Label>
-
       <div
         className={cn(
-          "relative flex flex-col items-center justify-center w-32 p-6 rounded-lg cursor-pointer transition-colors",
+          "relative flex flex-col items-center justify-center w-28  rounded-lg cursor-pointer transition-colors",
           isDragging ? "border-primary bg-primary/5" : "border-input hover:border-primary/50 hover:bg-muted/50",
-          preview ? "h-auto aspect-auto" : "h-30",
+          preview ? "h-auto aspect-auto" : "h-28",
           "bg-shape-shape", // Light pink background matching the image
         )}
         onDragOver={handleDragOver}
@@ -125,8 +121,8 @@ export default function FileInput({
         {preview ? (
           <div className="relative w-full">
             <img src={preview || "/placeholder.svg"} alt="Preview" className="max-h-64 max-w-full mx-auto rounded-md" />
-            <Button variant="secondary" size="sm" className="absolute top-2 right-2" onClick={removeFile}>
-              Remove
+            <Button variant="secondary" size="sm" className="absolute bottom-0 right-0" onClick={removeFile}>
+            <Trash className="w-4 h-4 text-orange-base" />
             </Button>
           </div>
         ) : (

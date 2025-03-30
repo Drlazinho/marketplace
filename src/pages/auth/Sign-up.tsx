@@ -42,7 +42,7 @@ export function SignUp() {
             placeholder="Seu nome completo"
             type="text"
             filled
-            className="mt-10 mb-4"
+            className="mt-6 mb-4"
           />
           <Input
             label="Telefone"
