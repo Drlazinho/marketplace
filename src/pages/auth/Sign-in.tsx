@@ -10,6 +10,7 @@ import { signIn } from "@/api/sign-in";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 const signInForm = z.object({
   email: z.string().email(),
@@ -37,17 +38,18 @@ export function SignIn() {
 
   const handleSignIn = async ({ email, password }: SignInForm) => {
     try {
-      await authenticate({ email, password });
+      const response = await authenticate({ email, password });
+      sessionStorage.setItem("auth", response.accessToken)
 
-      toast.success("Enviamos um link de autenticação para seu e-mail.", {
+      toast.success("Login realizado com sucesso");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Credenciais Inválidas", {
+        description: error?.response?.data?.message,
         action: {
           label: "Tentar Novamente",
           onClick: () => handleSignIn({ email, password }),
         },
-      });
-    } catch (error) {
-      toast.error("Credenciais Inválidas", {
-        description: error?.response?.data?.message,
       });
     }
   };

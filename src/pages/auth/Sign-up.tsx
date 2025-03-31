@@ -13,7 +13,7 @@ export function SignUp() {
    const navigate = useNavigate()
   
     function goSignIn() {
-      navigate('/sign-in')
+      navigate('/')
     }
   
 
