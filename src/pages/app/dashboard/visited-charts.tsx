@@ -1,6 +1,10 @@
+import { getMetricsViewsDays } from "@/api/metrics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DatePickerWithRange } from '@/components/ui/data-range-picker'
-import React, { PureComponent } from "react";
+import { DatePickerWithRange } from "@/components/ui/data-range-picker";
+import { dateFormatter } from "@/utils/dateFormatter";
+import { useQuery } from "@tanstack/react-query";
+import { Users } from 'lucide-react'
+import { useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -8,99 +12,125 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+import { TooltipProps } from 'recharts';
 
-export default class VisitedCharts extends PureComponent {
-  static demoUrl =
-    "https://codesandbox.io/p/sandbox/line-chart-width-xaxis-padding-8v7952";
+const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
+  if (!active || !payload || payload.length === 0) return null;
 
-  render() {
+  return (
+    <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-md">
+      <p className="font-bold text-sm text-gray-800 uppercase">
+        {label} {/* Esta será sua data formatada */}
+      </p>
+      <div className="flex items-center mt-1">
+        <span className="mr-2"><Users color='#009CF0'/></span>
+        <span className="text-blue-dark font-medium">
+          {payload[0].value} visitantes
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export function VisitedCharts() {
+  const {
+    data: dataMetricsView,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["amountMetricsViewsDays"],
+    queryFn: getMetricsViewsDays,
+  });
+
+  const chartData = useMemo(() => {
+    return dataMetricsView?.viewsPerDay.map((chartItem) => {
+      return {
+        date: dateFormatter(chartItem.date),
+        amount: chartItem.amount,
+      };
+    });
+  }, [dataMetricsView]);
+
+  if (isLoading) {
     return (
-      <>
-        <Card className='border-none rounded-2xl'>
-          <CardHeader>
-            <div className='flex justify-between'>
-            <CardTitle>Visitante</CardTitle>
-                <DatePickerWithRange className='border-none'/>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart
-                width={500}
-                height={300}
-                data={data}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="pv"
-                  stroke="#8884d8"
-                  activeDot={{ r: 8 }}
-                />
-                <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </>
+      <Card className="border-none rounded-2xl">
+        <CardHeader>
+          <div className="flex justify-between">
+            <CardTitle>Visitantes</CardTitle>
+            <DatePickerWithRange className="border-none" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[280px] flex items-center justify-center">
+            Carregando dados...
+          </div>
+        </CardContent>
+      </Card>
     );
   }
+
+  if (error) {
+    return (
+      <Card className="border-none rounded-2xl">
+        <CardHeader>
+          <div className="flex justify-between">
+            <CardTitle>Visitantes</CardTitle>
+            <DatePickerWithRange className="border-none" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[280px] flex items-center justify-center text-red-500">
+            Erro ao carregar dados
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="border-none rounded-2xl">
+      <CardHeader>
+        <div className="flex justify-between">
+          <CardTitle>Visitantes</CardTitle>
+          {/* <DatePickerWithRange className="border-none" /> */}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <ResponsiveContainer width="100%" height={280}>
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip
+                content={<CustomTooltip />}
+                // formatter={(value) => [`${value} visitas`]}
+                wrapperStyle={{ 
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            />
+            {/* <Legend/> */}
+            <Line
+              type="monotone"
+              dataKey="amount"
+              stroke="#009CF0"
+              activeDot={{ r: 3 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
 }
